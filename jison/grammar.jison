@@ -3,7 +3,8 @@
 /* laxical grammar */
 
 %{
-var TreeParser = require('./js/treeParser.js');
+var TreeParser = require('/Users/kvikas/step2Sem/compiler/js/treeParser.js');
+var Node = require('/Users/kvikas/step2Sem/compiler/js/node.js');
 
 %}
 
@@ -23,7 +24,7 @@ var TreeParser = require('./js/treeParser.js');
 
 /* operator associations and precedence */
 
-%left '+'
+%right '+'
 %left '*'
 
 %start expressions
@@ -31,19 +32,33 @@ var TreeParser = require('./js/treeParser.js');
 
 expressions
 	: e EOF
-		{console.log("result==> ",$$.toString());}
+		{return $1;}
 	;
 
 e
 	:e '+' e
-		{ $$ = new TreeParser($2,$1,$3);}
+		{
+
+        $2 = Node.createNodeForOperator($2);
+		$$ = new TreeParser($1,$2,$3);
+
+		}
 
 	| e '*' e
-		{$$ = new TreeParser($2,$1,$3);}
+
+		{
+
+		$2 = Node.createNodeForOperator($2);
+		$$ = new TreeParser($1,$2,$3);
+
+		}
 
 	| '(' e ')'
 		{$$ =$2;}
 
 	| NUMBER
-		{$$=Number(yytext);}
+		{
+		$$ = Node.createNodeForNumber(Number(yytext));
+
+		}
 	;
