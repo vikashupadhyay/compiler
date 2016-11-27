@@ -3,18 +3,25 @@
 /* laxical grammar */
 
 %{
-var TreeParser = require('/Users/kvikas/step2Sem/compiler/js/treeParser.js');
-var Node = require('/Users/kvikas/step2Sem/compiler/js/node.js');
+
+    var Tree = require('/Users/kvikas/step2Sem/compiler/js/tree.js');
+    var Node = require('/Users/kvikas/step2Sem/compiler/js/node.js');
+    var currentTree = [];
+
 
 %}
+
 
 %lex
 %%
 
 \s+						/* skip spaces */
 [0-9]+("."[0-9]+)?\b	return 'NUMBER'
+[a-zA-Z_$]+             return 'VARIABLE'
 "+"						return '+'
 "*"						return '*'
+"="                     return '='
+";"                     return ';'
 "("						return '('
 ")"						return ')'
 <<EOF>>					return 'EOF'
@@ -23,42 +30,80 @@ var Node = require('/Users/kvikas/step2Sem/compiler/js/node.js');
 /lex
 
 /* operator associations and precedence */
-
+%right ';'
 %right '+'
-%left '*'
+%right '*'
+%right '='
 
-%start expressions
+
+%start setOfProgram
 %% /* langauge grammar  */
 
-expressions
-	: e EOF
-		{return $1;}
+setOfProgram
+	: STATEMENTS EOF{
+	    {
+            var resultantTree = currentTree;
+            currentTree = [];
+	        return resultantTree;
+	    }
+	}
+
 	;
 
-e
-	:e '+' e
+STATEMENTS
+
+        : STATEMENT
+        | STATEMENTS STATEMENT
+
+        ;
+
+STATEMENT
+
+        : ASSIGNMENT ';'{
+            currentTree.push($1);
+        }
+        | EXPRESSION ';'{
+            currentTree.push($1)
+        }
+
+        ;
+
+ASSIGNMENT
+
+      : EXPRESSION '=' EXPRESSION {
+            $2 = Node.createNodeForOperator($2);
+            $$  = new Tree($1,$2,$3);
+
+      }
+
+      ;
+
+
+EXPRESSION
+    : EXPRESSION '+' EXPRESSION
 		{
 
-        $2 = Node.createNodeForOperator($2);
-		$$ = new TreeParser($1,$2,$3);
-
+       $2 = Node.createNodeForOperator($2);
+		$$ = new Tree($1,$2,$3);
 		}
 
-	| e '*' e
+	| EXPRESSION '*' EXPRESSION
 
 		{
-
 		$2 = Node.createNodeForOperator($2);
-		$$ = new TreeParser($1,$2,$3);
-
+		$$ = new Tree($1,$2,$3);
 		}
 
-	| '(' e ')'
-		{$$ =$2;}
 
 	| NUMBER
 		{
 		$$ = Node.createNodeForNumber(Number(yytext));
 
 		}
+
+	}
+    | VARIABLE{
+            $$ = Node.createNodeForVar($$);
+    }
+
 	;
