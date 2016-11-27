@@ -4,7 +4,7 @@ class Operator {
     }
 
     toString() {
-        var operators = {'+': 'plus', '*': 'times'};
+        var operators = {'+': 'plus', '*': 'times', '=': 'equals'};
         return operators[this.operator];
     }
 

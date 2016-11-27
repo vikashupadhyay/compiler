@@ -1,5 +1,5 @@
 
-class TreeParser {
+class Tree {
     constructor(leftChild,parantNode, rightChild) {
         this.leftChild = leftChild;
         this.parantNode = parantNode;
@@ -8,4 +8,4 @@ class TreeParser {
 
 }
 
-module.exports = TreeParser;
+module.exports = Tree;
