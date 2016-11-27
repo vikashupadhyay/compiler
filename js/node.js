@@ -24,9 +24,15 @@ class Node {
         node.toWords = function () {
             return operator.toString();
         };
-        node.evaluate = function (lc, rc) {
+        node.evaluate = function (lc, rc, lookupTable) {
             return operator.eval(lc.evaluate(), rc.evaluate());
         };
+        return node;
+    }
+
+    static createNodeForVar(identifier) {
+        var node = new Node("identifier", identifier);
+        node.text = "var " + identifier;
         return node;
     }
 }
