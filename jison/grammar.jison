@@ -5,8 +5,9 @@
 %{
 
     var Tree = require('/Users/kvikas/step2Sem/compiler/js/tree.js');
+    var Trees = require('/Users/kvikas/step2Sem/compiler/js/trees.js');
     var Node = require('/Users/kvikas/step2Sem/compiler/js/node.js');
-    var currentTree = [];
+    var currentTrees = new Trees();
 
 
 %}
@@ -42,8 +43,8 @@
 setOfProgram
 	: STATEMENTS EOF{
 	    {
-            var resultantTree = currentTree;
-            currentTree = [];
+            var resultantTree = currentTrees;
+            currentTrees = currentTrees.wipeOut();
 	        return resultantTree;
 	    }
 	}
@@ -60,10 +61,10 @@ STATEMENTS
 STATEMENT
 
         : ASSIGNMENT ';'{
-            currentTree.push($1);
+            currentTrees.addTree($1);
         }
         | EXPRESSION ';'{
-            currentTree.push($1)
+            currentTrees.addTree($1)
         }
 
         ;

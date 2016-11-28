@@ -3,13 +3,13 @@ class Operator {
         this.operator = operator;
     }
 
-    toString() {
+    toWords() {
         var operators = {'+': 'plus', '*': 'times', '=': 'equals'};
         return operators[this.operator];
     }
 
     eval(num1, num2) {
-        var op = this.toString();
+        var op = this.toWords();
         return this[op](num1, num2);
 
     }
