@@ -4,7 +4,7 @@
 
 %{
 
-    var Tree = require('/Users/kvikas/step2Sem/compiler/js/tree.js');
+        var Tree = require('/Users/kvikas/step2Sem/compiler/js/tree.js');
     var Trees = require('/Users/kvikas/step2Sem/compiler/js/trees.js');
     var Node = require('/Users/kvikas/step2Sem/compiler/js/node.js');
     var currentTrees = new Trees();
@@ -21,7 +21,10 @@
 [a-zA-Z_$]+             return 'VARIABLE'
 "+"						return '+'
 "*"						return '*'
-"="                     return '='
+"="						return '='
+"^"						return '^'
+"-"                     return '-'
+"/"                     return '/'
 ";"                     return ';'
 "("						return '('
 ")"						return ')'
@@ -32,9 +35,12 @@
 
 /* operator associations and precedence */
 %right ';'
-%right '+'
-%right '*'
 %right '='
+%left '+' '-'
+%left '*' '/'
+%left '^'
+
+
 
 
 %start setOfProgram
@@ -84,16 +90,37 @@ EXPRESSION
     : EXPRESSION '+' EXPRESSION
 		{
 
-       $2 = Node.createNodeForOperator($2);
-		$$ = new Tree($1,$2,$3);
+            $2 = Node.createNodeForOperator($2);
+            $$ = new Tree($1,$2,$3);
 		}
 
-	| EXPRESSION '*' EXPRESSION
+	| EXPRESSION '^' EXPRESSION
 
 		{
-		$2 = Node.createNodeForOperator($2);
-		$$ = new Tree($1,$2,$3);
+            $2 = Node.createNodeForOperator($2);
+            $$ = new Tree($1,$2,$3);
 		}
+
+	| EXPRESSION '-' EXPRESSION
+
+        {
+            $2 = Node.createNodeForOperator($2);
+            $$ = new Tree($1,$2,$3);
+        }
+
+    | EXPRESSION '*' EXPRESSION
+
+        {
+            $2 = Node.createNodeForOperator($2);
+            $$ = new Tree($1,$2,$3);
+        }
+
+    | EXPRESSION '/' EXPRESSION
+
+            {
+                $2 = Node.createNodeForOperator($2);
+                $$ = new Tree($1,$2,$3);
+            }
 
 
 	| NUMBER
