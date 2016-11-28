@@ -38,17 +38,26 @@ class Node {
     }
 
     static createNodeForVar(identifier) {
+        var self = this;
         var node = new Node("identifier", identifier);
         node.text = "var " + identifier;
-        node.evaluate = function () {
-            return identifier;
+        node.evaluate = function (table) {
+            if (table == undefined)
+                throw new Error(identifier + " is undefined");
+            return table[identifier];
         };
         return node;
     }
 
-    // static parenthesis(){
-    //     return this.value;
-    // }
+    static isTableEmpty(object) {
+        var isEmpty = true;
+        for (keys in object) {
+            isEmpty = false;
+            break; // exiting since we found that the object is not empty
+        }
+        return isEmpty;
+    }
+
 }
 
 
