@@ -17,12 +17,12 @@ describe("tree parser", function () {
     it("should return string representation of 3+2+3", function () {
         var parser = new Parser(grammar);
         var trees = parser.parse("3+2+3;");
-        chai.expect(trees.parenthesis()).to.equal("(3+(2+3))");
+        chai.expect(trees.parenthesis()).to.equal("((3+2)+3)");
     });
 
     it("should return string representation of 3+2+3+4", function () {
         var trees = parser.parse("3+2+3+4;");
-        chai.expect(trees.parenthesis()).to.equal("(3+(2+(3+4)))");
+        chai.expect(trees.parenthesis()).to.equal("(((3+2)+3)+4)");
     });
 
     it("should return word representation of 2+3", function () {
@@ -74,6 +74,38 @@ describe("tree parser", function () {
         var trees = parser.parse("a=2;a;");
         var table = trees.lookupTable();
         chai.expect(table["a"]).to.equal(2);
+    });
+
+    it("should create lookupTable x=10;y=x+20;y+5;", function () {
+        var trees = parser.parse("x=10;y=x+20;y+5;");
+        var table = trees.lookupTable();
+        chai.expect(table).to.deep.equal({x: 10, y: 30});
+    });
+
+
+    it("should evaluate a=2;a+2", function () {
+        var trees = parser.parse("a=2;a+2;");
+        chai.expect(trees.evaluate()).to.be.equal(4);
+    });
+
+    it("should evaluate a=10;5+a*2", function () {
+        var trees = parser.parse("a=10;5+a*2;");
+        chai.expect(trees.evaluate()).to.be.equal(25);
+    });
+
+    it("should evaluate x=10;y=x+20;y+5;", function () {
+        var trees = parser.parse("x=10;y=x+20;y+5;");
+        chai.expect(trees.evaluate()).to.be.equal(35);
+    });
+
+    it("should evaluate x=10;y=x+20;y+5;", function () {
+        var trees = parser.parse("x=2;x=2^5;x;");
+        chai.expect(trees.evaluate()).to.be.equal(32);
+    });
+
+    it.skip("throw error if identifier is undefined", function () {
+        var trees = parser.parse("x;");
+        chai.expect(trees.evaluate()).to.be.equal(32);
     });
 
 });

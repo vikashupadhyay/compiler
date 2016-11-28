@@ -34,7 +34,7 @@ class Trees {
         let self = this;
         this.trees.forEach(function (eachTree) {
             if (self.isEqualOperator(eachTree)) {
-                table[eachTree.leftChild.evaluate()] = eachTree.rightChild.value;
+                table[eachTree.leftChild.value] = eachTree.rightChild.evaluate(table);
             }
 
         });
@@ -42,10 +42,12 @@ class Trees {
     };
 
     evaluate() {
-        
-        // return this.trees.reduce(function (previousTree, nextTree) {
-        //     return
-        // },new Tree())
+        var result;
+        var lookupTable = this.lookupTable();
+        this.trees.forEach(function (tree) {
+            result = tree.evaluate(lookupTable)
+        });
+        return result;
     }
 
 }

@@ -20,6 +20,6 @@ describe("node", function () {
 
     it("should create node for operator", function () {
         var node = Node.createNodeForOperator('+');
-        chai.expect(node.evaluate(Node.createNodeForNumber(2).evaluate(), Node.createNodeForNumber(3).evaluate())).to.be.equal(5);
+        chai.expect(node.evaluate(2, 3), {}).to.be.equal(5);
     });
 });

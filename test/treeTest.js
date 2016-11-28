@@ -36,4 +36,13 @@ describe("Tree", function () {
         chai.expect(tree.evaluate()).to.be.equal(9);
     });
 
+    it("should return 5 as result of a=5", function () {
+        var lc = Node.createNodeForVar("a");
+        var rc = Node.createNodeForNumber(5);
+        var parantNode = Node.createNodeForOperator("=");
+        var tree = new Tree(lc, parantNode, rc);
+        chai.expect(tree.evaluate({})).to.be.equal(5);
+    });
+    
+
 });

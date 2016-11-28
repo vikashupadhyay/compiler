@@ -14,8 +14,8 @@ class Tree {
         return '(' + this.parantNode.toWords(this.leftChild.toWords(), this.rightChild.toWords()) + ')'
     }
 
-    evaluate() {
-        return this.parantNode.evaluate(this.leftChild.evaluate(), this.rightChild.evaluate());
+    evaluate(lookupTable) {
+        return this.parantNode.evaluate(this.leftChild.evaluate(lookupTable), this.rightChild.evaluate(lookupTable),lookupTable);
     }
 
 }
