@@ -108,4 +108,10 @@ describe("tree parser", function () {
         chai.expect(trees.evaluate()).to.be.equal(32);
     });
 
+    it("should evaluate x=10;y=20;z=30;x^2+y^2-z^2;", function () {
+        var trees = parser.parse("x=10;y=20;z=30;x^2+y^2-z^2;");
+        chai.expect(trees.evaluate()).to.be.equal(-400);
+    });
+
+
 });
