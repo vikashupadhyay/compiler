@@ -1,5 +1,6 @@
 const readline = require('readline');
 var fs = require('fs');
+var chalk = require("chalk");
 var Parser = require('jison').Parser;
 var grammar = fs.readFileSync("../jison/grammar.jison", 'utf-8');
 var parser = new Parser(grammar);
@@ -14,7 +15,7 @@ rl.prompt();
 rl.on('line', (input) => {
     expression += input;
     var trees = parser.parse(expression);
-    console.log(trees.evaluate());
+    console.log(chalk.yellow(trees.evaluate()));
     rl.prompt();
 
 
