@@ -18,16 +18,22 @@
 
 \s+						/* skip spaces */
 [0-9]+("."[0-9]+)?\b	return 'NUMBER'
-[a-zA-Z_$]+             return 'VARIABLE'
 "+"						return '+'
 "*"						return '*'
 "="						return '='
 "^"						return '^'
+"if"                    return 'if'
+"else"                  return 'else'
+"{"                     return '{'
+"}"                     return '}'
+"true"                  return 'BOOLEAN'
+"false"                 return 'BOOLEAN'
 "-"                     return '-'
 "/"                     return '/'
 ";"                     return ';'
 "("						return '('
 ")"						return ')'
+[a-zA-Z_$]+             return 'VARIABLE'
 <<EOF>>					return 'EOF'
 .						return 'INVALID'
 
@@ -70,7 +76,11 @@ STATEMENT
             currentTrees.addTree($1);
         }
         | EXPRESSION ';'{
-            currentTrees.addTree($1)
+            currentTrees.addTree($1);
+        }
+
+        | CONDITION ';'{
+            currentTrees.addTree($1);
         }
 
         ;
@@ -84,6 +94,28 @@ ASSIGNMENT
       }
 
       ;
+
+CONDITION
+
+        : IfCONDITION
+        | IfCONDITION 'else' '{' BLOCK '}' {
+            $$ = Node.createElseNode($1,$4);
+        }
+
+        ;
+
+
+IfCONDITION
+            :'if' '(' 'BOOLEAN' ')' '{' BLOCK '}'{
+                $$ = Node.createIfNode($3,$6);
+            }
+
+            ;
+BLOCK
+
+     : STATEMENTS
+
+     ;
 
 
 EXPRESSION

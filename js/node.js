@@ -58,6 +58,20 @@ class Node {
         return isEmpty;
     }
 
+    static createIfNode(boolean,expression){
+        var node  = new Node("if",boolean);
+        node.expression = expression;
+
+        return node;
+    }
+
+    static createElseNode(ifBlock,expression){
+        var node  = new Node("else",ifBlock);
+        node.expression = expression;
+
+        return node;
+    }
+
 }
 
 
